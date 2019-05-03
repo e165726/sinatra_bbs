@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <mata charset="utf-8">
+  <title>簡易BBS by sinatra</title>
+</head>
+<body>
+  <h1>簡易BBS by sinatra</h1>
+  <h2>投稿フォーム</h2>
+  <form action="/posts" method="POST">
+    <label for="name">名前：</label>
+    <input type="text" name="name" id="name" />
+    <label for="email">メールアドレス：</label>
+    <input type="email" name="email" id="email" />
+    <label for="message">内容：</label>
+    <input type="text" name="message" id="message"/>
+    
+    <input type="submit" value="送信する">
+  </form>
+  
+  <h2>書き込み</h2>
+  <% @sql.each do |row| %>
+  <div>
+    <%= row['name'] %>
+    <%= row['email']%>
+    <%= row['message'] %>
+  </div>
+  <% end %>
+</body>
+</html>
