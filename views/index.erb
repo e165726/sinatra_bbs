@@ -14,16 +14,17 @@
     <input type="email" name="email" id="email" />
     <label for="message">内容：</label>
     <input type="text" name="message" id="message"/>
-    
+
     <input type="submit" value="送信する">
   </form>
-  
+
   <h2>書き込み</h2>
   <% @sql.each do |row| %>
   <div>
     <%= row['name'] %>
     <%= row['email']%>
     <%= row['message'] %>
+		<a href="/delete/<%= row[:id] %>" class="btn btn-danger">Delete</a>
   </div>
   <% end %>
 </body>
