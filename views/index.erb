@@ -24,7 +24,10 @@
     <%= row['name'] %>
     <%= row['email']%>
     <%= row['message'] %>
-		<a href="/delete/<%= row[:id] %>" class="btn btn-danger">Delete</a>
+		<form method="post" action="delete/<%= row['id'] %>">
+      <input type="hidden" name="_method" value="DELETE">
+     	<input type="submit" value="削除">
+    </form>
   </div>
   <% end %>
 </body>

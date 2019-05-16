@@ -7,19 +7,27 @@ services:
     build: .
     command: bundle exec rackup config.ru -p 5000 -o 0.0.0.0
     volumes:
-      - .:/usr/src/bbs
+      - .:/bbs
     ports:
-      - "5000:5000"
+      - 5000:5000
+    # links:
+    # - "db"
+    # environment:
+    # - DATABASE_HOST=db
+    # - DATABASE_NAME=sinatra
+    # - DATABASE_USER=sinatra
+    # - DATABASE_PASSWORD=sinatra
   db:
-    image: "postgres"
+    image: postgres:10
     environment:
-    - POSTGRES_USER=sinatra
-    - POSTGRES_PASSWORD=sinatra
+      POSTGRES_USER: sinatra
+      POSTGRES_PASSWORD: sinatra
     ports:
       - "5432:5432"
+    # volumes:
+    #   - ./postgres/init:/docker-entrypoint-initdb.d
     volumes:
-      - ./postgres/init:/docker-entrypoint-initdb.d
-    hostname: postgres
-    restart: always
-    user: root
-
+      - ./db:/docker-entrypoint-initdb.d
+    # hostname: postgres
+    # restart: always
+    # user: postgres

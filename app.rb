@@ -3,6 +3,8 @@ require 'sinatra/reloader'
 require 'dotenv/load'
 require 'pg'
 
+use Rack::MethodOverride
+
 get '/' do
   db = PG::connect(:dbname => 'bbs')
   @sql = db.exec("SELECT * FROM boards")
@@ -21,16 +23,16 @@ post '/posts' do
   redirect "/"
 end
 
-get '/delete/:id' do
-	db = PG::connect(:dbname => 'bbs')
-  @item = db.exec("SELECT * FROM boards where $1", params[:id])
-	erb :delete
-end
+# get '/delete/:id' do
+# 	db = PG::connect(:dbname => 'bbs')
+#   @item = db.exec("SELECT * FROM boards where $1", params[:id])
+# 	erb :delete
+# end
 
-post '/delete/:id' do
-  if params.has_key?("ok")
-  	item = db.exec("SELECT * FROM boards where $1", params[:id])
-    item.destroy
-  end
+delete '/delete/:id' do
+	# if params.has_key?("ok")
+		db = PG::connect(:dbname => 'bbs')
+  	db.exec("DELETE FROM boards where $1", [params[:id]])
+  # end
   redirect '/'
 end
