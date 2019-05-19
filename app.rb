@@ -5,10 +5,51 @@ require 'pg'
 
 use Rack::MethodOverride
 
+db = PG::connect(
+  :host => "localhost",
+  :user => 'e165726', :password => '',
+	:dbname => "bbs")
+
 get '/' do
-  db = PG::connect(:dbname => 'bbs')
-  @sql = db.exec("SELECT * FROM boards")
+  @sql = db.exec_params("SELECT * FROM board")
   erb :index
+end
+
+get '/login' do
+  session[:name] = nil
+  erb :login
+end
+
+post '/login' do
+  name = params[:name]
+  password = params[:password]
+
+  users = db.exec_params('select * from users')
+
+  users.each do |user|
+    if user['name'] == name && user['password'] == password
+      session[:name] = name
+      @current_user = session[:name]
+    end
+  end
+
+  redirect to ('/login') if session[:name].nil?
+  redirect to ('/')
+end
+
+post '/signup' do
+  name = params[:name]
+  email = params[:email]
+  password = params[:password]
+  db.exec_params('INSERT INTO users (name, email, password) VALUES ($1,$2,$3)', [name, email, password])
+
+  session[:name] = name
+
+  redirect to('/')
+end
+
+get '/signup' do
+  erb :signup
 end
 
 post '/posts' do
@@ -16,23 +57,20 @@ post '/posts' do
   email = params[:email]
   message = params[:message]
 
-	unless name.empty? || email.empty? || message.empty?
-		db = PG::connect(:dbname => 'bbs')
-		db.exec("insert into boards (name, email, message) values($1, $2, $3)", [name, email, message])
-	end
-  redirect "/"
+  unless name.empty? || email.empty? || message.empty?
+    db.exec_params("insert into board (name, email, message) values($1, $2, &3)", [name, email, message])
+  end
+  redirect to ('/')
 end
 
 # get '/delete/:id' do
-# 	db = PG::connect(:dbname => 'bbs')
 #   @item = db.exec("SELECT * FROM boards where $1", params[:id])
 # 	erb :delete
 # end
 
 delete '/delete/:id' do
-	# if params.has_key?("ok")
-		db = PG::connect(:dbname => 'bbs')
-  	db.exec("DELETE FROM boards where $1", [params[:id]])
-  # end
+    db.exec_params("DELETE FROM board where $1", [params[:id]])
   redirect '/'
 end
+
+

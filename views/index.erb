@@ -7,6 +7,7 @@
 <body>
   <h1>簡易BBS by sinatra</h1>
   <h2>投稿フォーム</h2>
+  <h2>こんにちは。<%= @current_user %>さん</h2>
   <form action="/posts" method="POST">
     <label for="name">名前：</label>
     <input type="text" name="name" id="name" />
