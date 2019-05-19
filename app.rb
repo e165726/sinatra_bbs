@@ -41,8 +41,8 @@ post '/signup' do
   name = params[:name]
   email = params[:email]
   password = params[:password]
-  db.exec_params('INSERT INTO users (name, email, password) VALUES ($1,$2,$3)', [name, email, password])
 
+  db.exec_params('INSERT INTO users (name, email, password) VALUES ($1,$2,$3)', [name, email, password])
   session[:name] = name
 
   redirect to('/')
@@ -58,7 +58,8 @@ post '/posts' do
   message = params[:message]
 
   unless name.empty? || email.empty? || message.empty?
-    db.exec_params("insert into board (name, email, message) values($1, $2, &3)", [name, email, message])
+    db.exec_params('INSERT INTO board (name, email, message) VALUES ($1,$2,$3)', [name, email, message])
+  session[:name] = name
   end
   redirect to ('/')
 end
@@ -69,7 +70,7 @@ end
 # end
 
 delete '/delete/:id' do
-    db.exec_params("DELETE FROM board where $1", [params[:id]])
+    db.exec_params('DELETE FROM board where id = $1', [params[:id]])
   redirect '/'
 end
 
