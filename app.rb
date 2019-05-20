@@ -2,13 +2,24 @@ require 'sinatra'
 require 'sinatra/reloader'
 require 'dotenv/load'
 require 'pg'
+require 'pry'
 
 use Rack::MethodOverride
+enable :sessions
 
 db = PG::connect(
   :host => "localhost",
   :user => 'e165726', :password => '',
-	:dbname => "bbs")
+  :dbname => "bbs"
+  )
+
+# FIX:
+helpers do
+  def current_user
+    return unless session[:email]
+    @current_user ||= db.exec_params("select * from users where email = $1", [session[:email]])
+  end
+end
 
 get '/' do
   @sql = db.exec_params("SELECT * FROM board")
@@ -17,25 +28,24 @@ get '/' do
 end
 
 get '/login' do
-  session[:name] = nil
+  # session[:name] = nil
+  session[:email] = nil
   erb :login
 end
 
 post '/login' do
-  name = params[:name]
+  email = params[:email]
   password = params[:password]
 
-  users = db.exec_params('select * from users')
+  users = db.exec_params('select * from users where email = $1 and password = $2', [email, password]).first
+  session[:email] = email unless users.nil?
 
-  users.each do |user|
-    if user['name'] == name && user['password'] == password
-      session[:name] = name
-      @current_user = session[:name]
-    end
-  end
-
-  redirect to ('/login') if session[:name].nil?
+  redirect to ('/login') if session[:email].nil?
   redirect to ('/')
+end
+
+get '/signup' do
+  erb :signup
 end
 
 post '/signup' do
@@ -44,13 +54,9 @@ post '/signup' do
   password = params[:password]
 
   db.exec_params('INSERT INTO users (name, email, password) VALUES ($1,$2,$3)', [name, email, password])
-  session[:name] = name
+  session[:mail] = mail
 
   redirect to('/')
-end
-
-get '/signup' do
-  erb :signup
 end
 
 post '/posts' do
@@ -60,9 +66,10 @@ post '/posts' do
 
   unless name.empty? || email.empty? || message.empty?
     db.exec_params('INSERT INTO board (name, email, message) VALUES ($1,$2,$3)', [name, email, message])
-  session[:name] = name
+    session[:email] = email
   end
-  redirect to ('/')
+
+  redirect to('/')
 end
 
 # get '/delete/:id' do
@@ -81,6 +88,5 @@ post '/upload' do
 
   FileUtils.mv(tmp, "./public/image/#{@filename}")
 
-  erb :index
+  redirect to ('/')
 end
-

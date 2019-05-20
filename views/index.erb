@@ -6,17 +6,15 @@
 </head>
 <body>
   <h1>簡易BBS by sinatra</h1>
-  <h2>こんにちは。さん</h2>
+  <h2>こんにちは。<%= session[:email] %>さん</h2>
+
+  <img src="/image/<%= @images.last %>"  width="500" height="400"/>
 
   <%# 画像投稿フォーム %>
   <form action="/upload" method="POST" enctype="multipart/form-data">
     <input type="file" name="file">
     <input type="submit" value="送信する">
   </form>
-
-  <% @images.each do |image| %>
-      <img src="/image/<%= image %>"  width="300" height="200"/>
-  <% end %>
 
   <h2>投稿フォーム</h2>
   <form action="/posts" method="POST">
