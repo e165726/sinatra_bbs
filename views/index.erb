@@ -6,8 +6,19 @@
 </head>
 <body>
   <h1>簡易BBS by sinatra</h1>
-  <h2>投稿フォーム</h2>
   <h2>こんにちは。さん</h2>
+
+  <%# 画像投稿フォーム %>
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file">
+    <input type="submit" value="送信する">
+  </form>
+
+  <% @images.each do |image| %>
+      <img src="/image/<%= image %>"  width="300" height="200"/>
+  <% end %>
+
+  <h2>投稿フォーム</h2>
   <form action="/posts" method="POST">
     <label for="name">名前：</label>
     <input type="text" name="name" id="name" />
@@ -20,18 +31,34 @@
   </form>
 
   <h2>書き込み</h2>
-  <% @sql.each do |row| %>
-  <div>
-    <%= row['name'] %>
-    <%= row['email'] %>
-    <%= row['message'] %>
-    <div style="display:inline-flex">
-      <form method="post" action="delete/<%= row['id'] %>">
-        <input type="hidden" name="_method" value="DELETE">
-        <input type="submit" value="削除">
-      </form>
-    </div>
-  </div>
-  <% end %>
+  <table class="table table-striped">
+    <tr>
+      <th>name</th>
+      <th>mail</th>
+      <th>message</th>
+    </tr>
+    <% @sql.each do |row| %>
+      <tr>
+        <td><%= row['name'] %></td>
+        <td><%= row['email'] %></td>
+        <td><%= row['message'] %></td>
+        <td>
+          <div style="display:inline-flex">
+            <form method="post" action="delete/<%= row['id'] %>">
+              <input type="hidden" name="_method" value="DELETE">
+              <input type="submit" value="削除">
+            </form>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+
+  <script
+  src="https://code.jquery.com/jquery-3.4.1.min.js"
+  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+  crossorigin="anonymous"></script>
+  <script src='/js/bootstrap.bundle.min.js'></script>
+  <script src='/js/bootstrap.min.js'></script>
 </body>
 </html>

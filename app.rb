@@ -12,6 +12,7 @@ db = PG::connect(
 
 get '/' do
   @sql = db.exec_params("SELECT * FROM board")
+  @images = Dir.glob("./public/image/*").map{|path| path.split('/').last }
   erb :index
 end
 
@@ -74,4 +75,12 @@ delete '/delete/:id' do
   redirect '/'
 end
 
+post '/upload' do
+  @filename = params[:file][:filename]
+  tmp = params[:file][:tempfile]
+
+  FileUtils.mv(tmp, "./public/image/#{@filename}")
+
+  erb :index
+end
 
