@@ -39,7 +39,6 @@ post '/login' do
   users = $db.exec_params('select * from users where email = $1 and password = $2', [email, password]).first
   session[:email] = email unless users.nil?
 
-	binding.pry
   redirect to ('/login') if session[:email].nil?
   redirect to ('/')
 end
