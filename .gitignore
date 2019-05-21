@@ -1,2 +1,3 @@
 ./db/
-./public/image/
+./public/image/*
+!.gitkeep
