@@ -3,6 +3,11 @@
 <head>
   <mata charset="utf-8">
   <title>簡易BBS by sinatra</title>
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/bootstrap-grid.min.css">
+  <link rel="stylesheet" href="/css/bootstrap-reboot.min.css">
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
 </head>
 <body>
   <h1>簡易BBS by sinatra</h1>
@@ -16,6 +21,7 @@
     <input type="submit" value="送信する">
   </form>
 
+  <br>
   <h2>投稿フォーム</h2>
   <form action="/posts" method="POST">
     <label for="name">名前：</label>
@@ -28,12 +34,14 @@
     <input type="submit" value="送信する">
   </form>
 
+  <br>
   <h2>書き込み</h2>
   <table class="table table-striped">
     <tr>
       <th>name</th>
       <th>mail</th>
       <th>message</th>
+      <th></th>
     </tr>
     <% @sql.each do |row| %>
       <tr>
