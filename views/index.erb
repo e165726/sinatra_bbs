@@ -6,7 +6,7 @@
 </head>
 <body>
   <h1>簡易BBS by sinatra</h1>
-  <h2>こんにちは。<%= session[:email] %>さん</h2>
+  <h2>こんにちは。<%= current_user['name'] %>さん</h2>
 
   <img src="/image/<%= @images.last %>"  width="500" height="400"/>
 
