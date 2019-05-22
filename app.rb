@@ -10,7 +10,7 @@ enable :sessions
 # dbのポートにアクセスできたらtrueを返す
 def connecting_db
   begin
-  TCPSocket.open('db', 5432)
+    TCPSocket.open('db', 5432)
   rescue
     false
   else
@@ -37,14 +37,9 @@ helpers do
 end
 
 get '/' do
-  hoge = ""
-  $db.exec_params('SELECT * FROM users;').each do |data|
-    hoge += "<p>"+data["name"]+"</p>"
-  end
-  hoge
-  # @sql = $db.exec_params("SELECT * FROM board")
-  # @images = Dir.glob("./public/image/*").map{|path| path.split('/').last }
-  # erb :index
+  @sql = $db.exec_params("SELECT * FROM board")
+  @images = Dir.glob("./public/image/*").map{|path| path.split('/').last }
+  erb :index
 end
 
 get '/login' do
@@ -74,7 +69,7 @@ post '/signup' do
   password = params[:password]
 
   $db.exec_params('INSERT INTO users (name, email, password) VALUES ($1,$2,$3)', [name, email, password])
-  session[:mail] = mail
+  session[:mail] = email
 
   redirect to('/')
 end

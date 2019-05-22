@@ -1,14 +1,17 @@
 CREATE DATABASE bbs;
 \c bbs;
-CREATE TABLE IF NOT EXISTS users(
-    -- id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL
+
+CREATE TABLE IF NOT EXISTS board (
+  id SERIAL NOT NULL PRIMARY KEY,
+  name VARCHAR( 25 ) NOT NULL,
+  email VARCHAR( 25 ) NOT NULL,
+  message VARCHAR( 25 ) NOT NULL
 );
 
-INSERT INTO users ("name")
-    VALUES
-        ('Akari Akaza'),
-        ('Kyoko Toshino'),
-        ('Yui Funami'),
-        ('Chinatsu Yoshikawa')
-;
+CREATE TABLE IF NOT EXISTS users (
+  id SERIAL NOT NULL PRIMARY KEY ,
+  name VARCHAR( 25 ) NOT NULL ,
+  email VARCHAR( 35 ) NOT NULL ,
+  password VARCHAR( 60 ) NOT NULL ,
+  UNIQUE (email)
+);

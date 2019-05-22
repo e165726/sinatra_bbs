@@ -10,13 +10,6 @@ services:
       - .:/bbs
     ports:
       - 5000:5000
-    # links:
-    # - "db"
-    # environment:
-    # - DATABASE_HOST=db
-    # - DATABASE_NAME=sinatra
-    # - DATABASE_USER=sinatra
-    # - DATABASE_PASSWORD=sinatra
   db:
     image: postgres:10
     environment:
@@ -24,10 +17,5 @@ services:
       POSTGRES_PASSWORD: sinatra
     ports:
       - "5432:5432"
-    # volumes:
-    #   - ./postgres/init:/docker-entrypoint-initdb.d
     volumes:
       - ./db:/docker-entrypoint-initdb.d
-    # hostname: postgres
-    # restart: always
-    # user: postgres
