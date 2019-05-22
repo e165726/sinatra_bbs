@@ -43,7 +43,6 @@ get '/' do
 end
 
 get '/login' do
-  # session[:name] = nil
   session[:email] = nil
   erb :login
 end

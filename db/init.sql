@@ -1,4 +1,3 @@
-CREATE DATABASE bbs;
 \c bbs;
 
 CREATE TABLE IF NOT EXISTS board (

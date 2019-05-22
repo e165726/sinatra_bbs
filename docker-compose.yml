@@ -10,6 +10,13 @@ services:
       - .:/bbs
     ports:
       - 5000:5000
+    links:
+      - "db"
+    environment:
+      - DATABASE_HOST=db
+      - DATABASE_NAME=sinatra
+      - DATABASE_USER=sinatra
+      - DATABASE_PASSWORD=sinatra
   db:
     image: postgres:10
     environment:
