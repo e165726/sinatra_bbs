@@ -7,9 +7,25 @@ require 'pry'
 use Rack::MethodOverride
 enable :sessions
 
+# dbのポートにアクセスできたらtrueを返す
+def connecting_db
+  begin
+  TCPSocket.open('db', 5432)
+  rescue
+    false
+  else
+    true
+  end
+end
+
+# dbに繋げられる状態まで1秒ずつ待つ
+while !connecting_db
+  sleep 1
+end
+
 $db = PG::connect(
-  :host => "localhost",
-  :user => 'e165726', :password => '',
+  :host => "db",
+  :user => 'sinatra', :password => 'sinatra',
   :dbname => "bbs"
   )
 
@@ -21,9 +37,14 @@ helpers do
 end
 
 get '/' do
-  @sql = $db.exec_params("SELECT * FROM board")
-  @images = Dir.glob("./public/image/*").map{|path| path.split('/').last }
-  erb :index
+  hoge = ""
+  $db.exec_params('SELECT * FROM users;').each do |data|
+    hoge += "<p>"+data["name"]+"</p>"
+  end
+  hoge
+  # @sql = $db.exec_params("SELECT * FROM board")
+  # @images = Dir.glob("./public/image/*").map{|path| path.split('/').last }
+  # erb :index
 end
 
 get '/login' do
